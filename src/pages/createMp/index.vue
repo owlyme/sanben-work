@@ -7,11 +7,13 @@
       </div>
       <div class="dream">
         <dream 
+          ref="dream"
           :comList="selectedComponentList"
           @on-submit="onSubmit" 
           @on-remove="onRemoveItem" 
           @on-move="onMoveItem"
-          @on-edit="onEdit" />
+          @on-edit="onEdit"
+          @on-order-change="onOrderChange" />
       </div>
     </div>
 
@@ -68,6 +70,7 @@
         if (!curItem && item.id == curItem.id) {
           this.editorIndex = -1
         }
+        this.updateDream()
       },
       onMoveItem(parent, item, index) {
         console.log("onMoveItem", parent, index, item)
@@ -84,6 +87,18 @@
         }
         com.parentId = item.id
         item.children.push(com)
+        this.updateDream()
+      },
+      updateDream() {
+        this.$refs.dream.$forceUpdate()
+      },
+      onOrderChange(parent, val) {
+        if (parent === null) {
+          this.selectedComponentList = val
+        } else {
+          parent.children = val
+        }
+        this.updateDream()
       }
     }
   }

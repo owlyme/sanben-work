@@ -1,55 +1,58 @@
 
 <script>
-// import draggable from "vuedraggable";
+import draggable from "vuedraggable";
 export default {
   name: "dream",
   render() {
     // console.log(this.comList)
-      // let comList = createNodeTree(createNodeMap(this.comList)).children || []
-      let comList = this.comList;
-      let submit = this.submit;
-      let removeItem = this.removeItem;
-      let moveItem = this.moveItem;
-      let editItem = this.editItem;
-      let activeId = this.activeId;
-      let resetAll = this.resetAll;
+    // let comList = createNodeTree(createNodeMap(this.comList)).children || []
+    let comList = this.comList;
+    let submit = this.submit;
+    let removeItem = this.removeItem;
+    let moveItem = this.moveItem;
+    let editItem = this.editItem;
+    let activeId = this.activeId;
+    let resetAll = this.resetAll;
 
-      const creatNode = (treeList) => {
-        if (!treeList || !treeList.length) return "";
-        return ( <ul> {treeList.map((item, index) => {
-              return createTag(treeList, item, index, creatNode(item.children));
+    const creatNode = (treeList, parent = null) => {
+      if (!treeList || !treeList.length) return "";
+      return (<ul>
+        <draggable value={treeList} onInput={(val) => {this.onOrderChange(parent, val)}}> 
+          {
+            treeList.map((item, index) => {
+              return createTag(treeList, item, index, creatNode(item.children, item));
             })
-          } </ul>
-        );
-      };
+          }
+        </draggable>
+      </ul>
+      );
+    };
 
-      const createTag = (parent, item, index, children) => {
-        // console.log(item)
-        let className = "item " + (activeId === item.id ? "active" : "");
-        return ( <li class = {className} key ={item.id}>
-          <div class = "component" > {item.component} 
-            <div class = "childrem" > {children} </div>
-          </div> 
-          <div class="actions" >
-          <button onClick = {() => removeItem(parent, item, index)} > remove </button> 
-          <button onClick = {(e) => {e.stopImmediatePropagation();editItem(parent, item, index);}} >edit </button> 
-          <button onClick = {() => moveItem(parent, item, index)}
-          onMousedown = {() => console.log(item)}
-          onMouseup = {() => console.log(item)} >move </button> 
-          </div> 
-          </li>
-        );
-      };
+    const createTag = (parent, item, index, children) => {
+      // console.log(item)
+      let className = "item " + (activeId === item.id ? "active" : "");
+      return ( <li class = {className} key ={item.id}>
+        <div class = "component" > {item.component} 
+          <div class = "childrem" > {children} </div>
+        </div> 
+        <div class="actions" >
+        <button onClick = {() => removeItem(parent, item, index)} > remove </button> 
+        <button onClick = {(e) => {e.stopImmediatePropagation();editItem(parent, item, index);}} >edit </button> 
+        <button onClick = {() => moveItem(parent, item, index)}
+        onMousedown = {() => console.log(item)}
+        onMouseup = {() => console.log(item)} >move </button> 
+        </div> 
+        </li>
+      );
+    };
 
-      return <div class = "dream" >
-        <div class = "submit"onClick = {submit } >submit </div>
-        <div class = "phoneSrceen"
-        onClick = {resetAll} > {
-          creatNode(comList)
-        }</div>
-        </div>
-      
-      
+    return <div class = "dream" >
+      <div class = "submit"onClick = {submit } >submit </div>
+      <div class = "phoneSrceen"
+      onClick = {resetAll} >
+        {creatNode(comList)}
+      </div>
+      </div>
   },
   props: {
     comList: {
@@ -63,7 +66,7 @@ export default {
     }
   },
   components: {
-    // draggable,
+    draggable,
   },
   mounted() {},
   methods: {
@@ -83,6 +86,10 @@ export default {
     resetAll() {
       this.activeId = null;
     },
+    onOrderChange(parent, val) {
+      // console.log(val)
+      this.$emit("on-order-change", parent, val);
+    }
   },
 };
 </script>

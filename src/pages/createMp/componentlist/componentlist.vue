@@ -19,6 +19,12 @@
         }, {
           tag: "copyText",
           component: "copyText"
+        }, {
+          tag: "text",
+          component: "text"
+        }, {
+          tag: "h3",
+          component: "h3"
         }]
       }
     },
