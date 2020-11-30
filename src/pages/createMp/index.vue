@@ -8,7 +8,7 @@
       <div class="dream">
         <dream 
           ref="dream"
-          :comList="selectedComponentList"
+          :treeNode="nodeTree"
           @on-submit="onSubmit" 
           @on-remove="onRemoveItem" 
           @on-move="onMoveItem"
@@ -16,7 +16,8 @@
           @on-order-change="onOrderChange" />
       </div>
       <div class="config">
-        <config :comp="compStyle" />
+        <config :comp="currentEditorItem.style" 
+        @on-style-change="onStyleChange" />
       </div>
     </div>
     <fileContent></fileContent>
@@ -41,9 +42,16 @@
         currentEditorItem: {},
         pageStyle: {},
         compStyle: {},
-        rootComponent: {
+        nodeTree: {
           tag: 'view',
-          children: this.selectedComponentList
+          id: -1,
+          style: {
+            background: 'none',
+            margin: '0 0 0 0',
+            padding: '0 0 0 0',
+            borderRadius: 0
+          },
+          children: []
         }
       }
     },
@@ -55,12 +63,7 @@
     },
     watch: {},
     mounted() {
-      this.pageRoot = {
-        background: 'none',
-        margin: '0 0 0 0',
-        padding: '0 0 0 0',
-        border_radius: 0
-      }
+      this.currentEditorItem = this.nodeTree
     },
     methods: {
       onSelected(item) {
@@ -68,17 +71,12 @@
         if (~this.editorIndex) {
           this.appendChild(item)
         } else {
-          this.selectedComponentList.push(item)
+          this.nodeTree.children.push(item)
         }
       },
       onSubmit() {
-        console.log(this.selectedComponentList)
-        let treeList = [{
-          tag: 'view',
-          children: this.selectedComponentList
-        }]
-        // this.pageRoot.children = this.selectedComponentList
-        console.log(createXml(treeList))
+        console.log(this.nodeTree)
+        console.log(createXml([this.nodeTree]))
       },
       onRemoveItem(parent, item, index) {
         parent.splice(index, 1)
@@ -93,8 +91,8 @@
       },
       onEdit(parent, item, index) {
         console.log("onEdit", parent, index, item)
-        this.editorIndex = index
-        this.currentEditorItem = index !== null ? item : {}
+        this.editorIndex = index !== null ? index : -1
+        this.currentEditorItem = index !== null ? item : this.nodeTree
       },
       appendChild(com) {
         let item = this.currentEditorItem
@@ -114,6 +112,10 @@
         } else {
           parent.children = val
         }
+        this.updateDream()
+      },
+      onStyleChange(val) {
+        this.currentEditorItem.style= val
         this.updateDream()
       }
     }

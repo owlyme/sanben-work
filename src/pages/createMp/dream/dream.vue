@@ -4,9 +4,9 @@ import draggable from "vuedraggable";
 export default {
   name: "dream",
   render() {
-    // console.log(this.comList)
-    // let comList = createNodeTree(createNodeMap(this.comList)).children || []
-    let comList = this.comList;
+    // console.log(this.treeNode)
+    // let treeNode = createNodeTree(createNodeMap(this.treeNode)).children || []
+    let treeNode = this.treeNode;
     let submit = this.submit;
     let removeItem = this.removeItem;
     let moveItem = this.moveItem;
@@ -50,18 +50,14 @@ export default {
     return <div class = "dream" >
       <div class = "submit"onClick = {submit } >submit </div>
       <div class="phoneSrceen"
-        style={this.pageStyle}
+        style={treeNode.style}
         onClick = {resetAll} >
-        {creatNode(comList)}
+        {creatNode(treeNode.children)}
       </div>
     </div>
   },
   props: {
-    comList: {
-      type: Array,
-      default: () => [],
-    },
-    pageStyle: {
+    treeNode: {
       type: Object,
       default: () => ({}),
     }
@@ -90,7 +86,8 @@ export default {
       this.$emit("on-edit", parent, item, index);
     },
     resetAll() {
-      this.activeId = null;
+      console.log('resetAll')
+      this.editItem(null, {id: null}, null)
     },
     onOrderChange(parent, val) {
       // console.log(val)

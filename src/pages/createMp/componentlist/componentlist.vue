@@ -39,7 +39,8 @@
         this.$emit('on-selected', {
           ...item,
           id: this.id++,
-          parentId: -1
+          parentId: -1,
+          style: {}
         })
       }
     }
