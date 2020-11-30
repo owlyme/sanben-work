@@ -31,34 +31,40 @@ export default {
     const createTag = (parent, item, index, children) => {
       // console.log(item)
       let className = "item " + (activeId === item.id ? "active" : "");
-      return ( <li class = {className} key ={item.id}>
-        <div class = "component" > {item.component} 
-          <div class = "childrem" > {children} </div>
-        </div> 
-        <div class="actions" >
-        <button onClick = {() => removeItem(parent, item, index)} > remove </button> 
-        <button onClick = {(e) => {e.stopImmediatePropagation();editItem(parent, item, index);}} >edit </button> 
-        <button onClick = {() => moveItem(parent, item, index)}
-        onMousedown = {() => console.log(item)}
-        onMouseup = {() => console.log(item)} >move </button> 
-        </div> 
+      return (<li class = {className} key ={item.id}>
+          <div class = "component" 
+              style={item.style}> {item.component} 
+            <div class = "childrem" > {children} </div>
+          </div> 
+          <div class="actions" >
+          <button onClick = {() => removeItem(parent, item, index)} > remove </button> 
+          <button onClick = {(e) => {e.stopImmediatePropagation();editItem(parent, item, index);}} >edit </button> 
+          <button onClick = {() => moveItem(parent, item, index)}
+          onMousedown = {() => console.log(item)}
+          onMouseup = {() => console.log(item)} >move </button> 
+          </div> 
         </li>
       );
     };
 
     return <div class = "dream" >
       <div class = "submit"onClick = {submit } >submit </div>
-      <div class = "phoneSrceen"
-      onClick = {resetAll} >
+      <div class="phoneSrceen"
+        style={this.pageStyle}
+        onClick = {resetAll} >
         {creatNode(comList)}
       </div>
-      </div>
+    </div>
   },
   props: {
     comList: {
       type: Array,
       default: () => [],
     },
+    pageStyle: {
+      type: Object,
+      default: () => ({}),
+    }
   },
   data() {
     return {

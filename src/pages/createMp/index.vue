@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <div class="flex-a">
+    <div class="flex">
       <div class="component-list">
         <componentlist 
         @on-selected="onSelected" />
@@ -15,8 +15,10 @@
           @on-edit="onEdit"
           @on-order-change="onOrderChange" />
       </div>
+      <div class="config">
+        <config :comp="compStyle" />
+      </div>
     </div>
-
     <fileContent></fileContent>
   </div>
   
@@ -25,27 +27,41 @@
 <script>
   import componentlist from './componentlist/componentlist'
   import dream from './dream/dream'
+  import config from './config/config'
   import fileContent from './fileContent/fileContent'
   import createXml from '@/utils/createXml'
   export default {
     name: 'index',
-    provide: {
-
-    },
+    provide: {},
     data() {
       return {
         currentIndex: 0,
         editorIndex: -1,
-        selectedComponentList: []
+        selectedComponentList: [],
+        currentEditorItem: {},
+        pageStyle: {},
+        compStyle: {},
+        rootComponent: {
+          tag: 'view',
+          children: this.selectedComponentList
+        }
       }
     },
     components: {
       componentlist,
       dream,
-      fileContent
+      fileContent,
+      config
     },
     watch: {},
-    mounted() {},
+    mounted() {
+      this.pageRoot = {
+        background: 'none',
+        margin: '0 0 0 0',
+        padding: '0 0 0 0',
+        border_radius: 0
+      }
+    },
     methods: {
       onSelected(item) {
         console.log(item)
@@ -61,11 +77,11 @@
           tag: 'view',
           children: this.selectedComponentList
         }]
+        // this.pageRoot.children = this.selectedComponentList
         console.log(createXml(treeList))
       },
       onRemoveItem(parent, item, index) {
         parent.splice(index, 1)
-
         let curItem = this.currentEditorItem
         if (!curItem && item.id == curItem.id) {
           this.editorIndex = -1
@@ -78,7 +94,7 @@
       onEdit(parent, item, index) {
         console.log("onEdit", parent, index, item)
         this.editorIndex = index
-        this.currentEditorItem = item
+        this.currentEditorItem = index !== null ? item : {}
       },
       appendChild(com) {
         let item = this.currentEditorItem
@@ -105,5 +121,7 @@
 </script>
 
 <style lang="less">
-
+.directives{
+  border-radius: ;
+}
 </style>
