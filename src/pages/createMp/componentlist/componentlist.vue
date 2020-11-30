@@ -9,13 +9,14 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
   export default {
     name: 'componentlist',
     data() {
       return {
         list: [{
-          tag: "view",
-          component: "view"
+          tag: "helloworld",
+          component: "helloworld"
         }, {
           tag: "copyText",
           component: "copyText"
@@ -38,7 +39,7 @@
         // console.log(item)
         this.$emit('on-selected', {
           ...item,
-          id: this.id++,
+          id: uuidv4(),
           parentId: -1,
           style: {}
         })
@@ -53,6 +54,7 @@
     padding: 5px 10px;
     li {
       margin: 10px;
+      cursor: pointer;
     }
   }
 </style>

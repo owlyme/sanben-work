@@ -59,38 +59,68 @@
 
       const creatNode = (treeList) => {
         if (!treeList || !treeList.length) return "";
-        return ( <ul> {treeList.map((item, index) => {
-              return createTag(treeList, item, index, creatNode(item.children));
-            })
-          } </ul>
-        );
+        return ( < ul > {
+          treeList.map((item, index) => {
+            return createTag(treeList, item, index, creatNode(item.children));
+          })
+        } < /ul>);
       };
 
       const createTag = (parent, item, index, children) => {
         // console.log(item)
         let className = "item " + (activeId === item.id ? "active" : "");
-        return ( <li class = {className} key ={item.id}>
-          <div class = "component" > {item.component} 
-            <div class = "childrem" > {children} </div>
-          </div> 
-          <div class="actions" >
-          <button onClick = {() => removeItem(parent, item, index)} > remove </button> 
-          <button onClick = {(e) => {e.stopImmediatePropagation();editItem(parent, item, index);}} >edit </button> 
-          <button onClick = {() => moveItem(parent, item, index)}
-          onMousedown = {() => console.log(item)}
-          onMouseup = {() => console.log(item)} >move </button> 
-          </div> 
-          </li>
+        return ( < li class = {
+            className
+          }
+          key = {
+            item.id
+          } >
+          <
+          div class = "component" > {
+            item.component
+          } <
+          div class = "childrem" > {
+            children
+          } < /div> <
+          /div>  <
+          div class = "actions" >
+          <
+          button onClick = {
+            () => removeItem(parent, item, index)
+          } > remove < /button>  <
+          button onClick = {
+            (e) => {
+              e.stopImmediatePropagation();
+              editItem(parent, item, index);
+            }
+          } > edit < /button>  <
+          button onClick = {
+            () => moveItem(parent, item, index)
+          }
+          onMousedown = {
+            () => console.log(item)
+          }
+          onMouseup = {
+            () => console.log(item)
+          } > move < /button>  <
+          /div>  <
+          /li>
         );
       };
 
-      return h(<div class = "dream" >
-        <div class = "submit"onClick = {submit } >submit </div>
-        <div class = "phoneSrceen"
-        onClick = {resetAll} > {
+      return h( < div class = "dream" >
+        <
+        div class = "submit"
+        onClick = {
+          submit
+        } > submit < /div> <
+        div class = "phoneSrceen"
+        onClick = {
+          resetAll
+        } > {
           creatNode(comList)
-        }</div>
-        </div>
+        } < /div> <
+        /div>
       );
     },
     components: {

@@ -1,28 +1,38 @@
 <template>
-  <div class="index">
-    <div class="flex">
+  <div class="create-mp-index">
+    <div class="flex-b flex-middle top">
+      <h3>配置小程序页面</h3>
+      <el-button type="primary" plain size="small" @click="onSubmit">生成文件类容</el-button>
+    </div>
+    <div class="flex container">
       <div class="component-list">
+        <h4>组件列表</h4>
         <componentlist 
         @on-selected="onSelected" />
       </div>
-      <div class="dream">
+      <div class="dream-part">
         <dream 
           ref="dream"
           :treeNode="nodeTree"
-          @on-submit="onSubmit" 
           @on-remove="onRemoveItem" 
           @on-move="onMoveItem"
           @on-edit="onEdit"
           @on-order-change="onOrderChange" />
       </div>
       <div class="config">
+        <h4>组件配置</h4>
         <config :comp="currentEditorItem.style" 
         @on-style-change="onStyleChange" />
       </div>
     </div>
-    <fileContent></fileContent>
+    
+    <el-dialog title="文本内容" 
+    width="800"
+    :visible.sync="dialogTableVisible" 
+    custom-class="xyz">
+      <fileContent :data="formatData"></fileContent>
+    </el-dialog>
   </div>
-  
 </template>
 
 <script>
@@ -30,28 +40,32 @@
   import dream from './dream/dream'
   import config from './config/config'
   import fileContent from './fileContent/fileContent'
-  import createXml from '@/utils/createXml'
+  import creatPage from '@/utils/createXml'
   export default {
-    name: 'index',
+    name: 'create-mp-index',
     provide: {},
     data() {
       return {
+        dialogTableVisible: false,
         currentIndex: 0,
         editorIndex: -1,
         selectedComponentList: [],
         currentEditorItem: {},
-        pageStyle: {},
-        compStyle: {},
         nodeTree: {
           tag: 'view',
           id: -1,
           style: {
             background: 'none',
-            margin: '0 0 0 0',
-            padding: '0 0 0 0',
+            margin: '0',
+            padding: '0',
             borderRadius: 0
           },
           children: []
+        },
+        // formatData 
+        formatData: {
+          xml: '',
+          css: ''
         }
       }
     },
@@ -76,7 +90,9 @@
       },
       onSubmit() {
         console.log(this.nodeTree)
-        console.log(createXml([this.nodeTree]))
+        this.formatData = creatPage([this.nodeTree])
+        this.dialogTableVisible = true
+        console.log(this.formatData)
       },
       onRemoveItem(parent, item, index) {
         parent.splice(index, 1)
@@ -108,7 +124,8 @@
       },
       onOrderChange(parent, val) {
         if (parent === null) {
-          this.selectedComponentList = val
+          // this.selectedComponentList = val
+          this.nodeTree.children = val
         } else {
           parent.children = val
         }
@@ -123,7 +140,20 @@
 </script>
 
 <style lang="less">
-.directives{
-  border-radius: ;
+.create-mp-index {
+  .top {
+    padding: 3px 10px;
+    box-shadow: 0px 0px 1px 0px rgba(153, 153, 153, 0.6);
+  }
+  .container {
+    margin-top: 5px;
+    padding: 0 10px;
+  }
+  .dream-part {
+    margin: 0 10px;
+  }
+}
+.xyz .el-dialog__body {
+  padding-top: 0px
 }
 </style>
