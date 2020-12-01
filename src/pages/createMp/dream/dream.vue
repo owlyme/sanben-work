@@ -15,6 +15,9 @@ export default {
     let resetAll = this.resetAll;
 
     const creatNode = (treeList, parent = null) => {
+      if (typeof treeList === 'string' ) {
+        return treeList
+      }
       if (!treeList || !treeList.length) return "";
       return (<ul>
         <draggable value={treeList} onInput={(val) => {this.onOrderChange(parent, val)}}> 
@@ -33,9 +36,8 @@ export default {
       let className = "item " + (activeId === item.id ? "active" : "");
       return (<li class={className} key ={item.id}>
           <div class="component" style={item.style}> 
-            {item.component}
-            <componentPreview name={item.component} />
-            <div class = "childrem"> {children} </div>
+            {item.tag}
+            <componentPreview name={item.component} >{children}</componentPreview>
           </div>
 
           <div class="actions" >
@@ -44,7 +46,7 @@ export default {
               icon="el-icon-edit" circle
               size="mini" 
               onClick = {(e) => {e.stopImmediatePropagation();editItem(parent, item, index);}} />
-              
+               
             <el-button  type="primary"  icon="el-icon-rank" circle
               size="mini" 
               onClick = {() => moveItem(parent, item, index)} />

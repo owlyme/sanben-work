@@ -6,11 +6,18 @@
     </div>
     <div class="flex container">
       <div class="component-list">
-        <h4>组件列表</h4>
+        <h4 class="part-top">组件列表</h4>
         <componentlist 
         @on-selected="onSelected" />
       </div>
       <div class="dream-part">
+        <h4 class="part-top">
+          <el-input size="mini" 
+          style="text-align: center"
+          placeholder="设置页面标题"
+          type="text"
+          v-model="nodeTree.pageTitle" />
+        </h4>
         <dream 
           ref="dream"
           :treeNode="nodeTree"
@@ -20,22 +27,24 @@
           @on-order-change="onOrderChange" />
       </div>
       <div class="config">
-        <h4>组件配置</h4>
-        <config :comp="currentEditorItem.style" 
-        @on-style-change="onStyleChange" />
+        <h4 class="part-top">组件配置</h4>
+        <config
+        :component="currentEditorItem"
+        @on-change="onComChange" />
       </div>
     </div>
     
     <el-dialog title="文本内容" 
-    width="800"
-    :visible.sync="dialogTableVisible" 
-    custom-class="xyz">
+      width="800"
+      :visible.sync="dialogTableVisible" 
+      custom-class="xyz">
       <fileContent :data="formatData"></fileContent>
     </el-dialog>
   </div>
 </template>
 
 <script>
+  import { v4 as uuidv4 } from 'uuid';
   import componentlist from './componentlist/componentlist'
   import dream from './dream/dream'
   import config from './config/config'
@@ -53,7 +62,8 @@
         currentEditorItem: {},
         nodeTree: {
           tag: 'view',
-          id: -1,
+          id: uuidv4(),
+          pageTitle: "",
           style: {
             background: 'none',
             margin: '0',
@@ -80,13 +90,29 @@
       this.currentEditorItem = this.nodeTree
     },
     methods: {
-      onSelected(item) {
-        console.log(item)
-        if (~this.editorIndex) {
-          this.appendChild(item)
-        } else {
-          this.nodeTree.children.push(item)
+      setProperties(item) {
+        return {
+          ...item,
+          id: uuidv4(),
+          children: []
         }
+      },
+      appendChild(com) {
+        let item = this.currentEditorItem
+        if(item.tag === 'text') {
+          this.$message({
+            message: 'text组件不能添加子组件',
+            type: 'warning'
+          });
+          return
+        }
+        com.parentId = item.id
+        item.children.push(com)
+      },
+      onSelected(item) {
+        let hasNewPropertiesItem = this.setProperties(item)
+        this.appendChild(hasNewPropertiesItem)
+        this.updateDream()
       },
       onSubmit() {
         console.log(this.nodeTree)
@@ -110,15 +136,7 @@
         this.editorIndex = index !== null ? index : -1
         this.currentEditorItem = index !== null ? item : this.nodeTree
       },
-      appendChild(com) {
-        let item = this.currentEditorItem
-        if (!item.children) {
-          item.children = []
-        }
-        com.parentId = item.id
-        item.children.push(com)
-        this.updateDream()
-      },
+      
       updateDream() {
         this.$refs.dream.$forceUpdate()
       },
@@ -131,8 +149,9 @@
         }
         this.updateDream()
       },
-      onStyleChange(val) {
-        this.currentEditorItem.style= val
+      onComChange(val) {
+        // this.currentEditorItem.style= val
+        Object.assign(this.currentEditorItem, val)
         this.updateDream()
       }
     }
@@ -151,6 +170,11 @@
   }
   .dream-part {
     margin: 0 10px;
+  }
+  .part-top {
+    height: 28px;
+    line-height: 28px;
+    margin-bottom: 3px;
   }
 }
 .xyz .el-dialog__body {

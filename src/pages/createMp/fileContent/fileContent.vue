@@ -13,6 +13,7 @@
       <div>
         <pre id="html">{{data.xml}}</pre>
       </div>
+
       <h4 class="flex-b flex-middle">
         <span>css部分</span>   
         <el-button  plain
@@ -25,6 +26,20 @@
       <div>
         <pre id="css">{{data.css}}</pre>
       </div>
+
+      <h4 class="flex-b flex-middle">
+        <span>json部分</span>   
+        <el-button  plain
+          size="small"
+          class="json"
+          data-clipboard-action="copy" 
+          data-clipboard-target="#json"
+          >复制</el-button>
+      </h4>
+      <div>
+        <pre id="json">{{data.json}}</pre>
+      </div>
+
     </div>
   </div>
 </template>
@@ -65,6 +80,16 @@ import Clipboard from 'clipboard';
 
       new Clipboard('.html', {
         container: document.getElementById('html'),
+      }).on('success', (e) => {
+        this.$message({
+          message: '复制成功',
+          type: 'success'
+        });
+        e.clearSelection();
+      });
+
+      new Clipboard('.json', {
+        container: document.getElementById('json'),
       }).on('success', (e) => {
         this.$message({
           message: '复制成功',

@@ -45,8 +45,6 @@ function createNodeTree(nodeMap = {}) {
   return root
 }
 
-
-
 let nodeMap = createNodeMap(list)
 
 console.log(createNodeTree(nodeMap))
