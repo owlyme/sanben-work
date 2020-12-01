@@ -84,7 +84,7 @@
     padding: 5px 10px;
     li {
       margin: 10px;
-      width: 200px;
+      width: 100%;
       cursor: pointer;
       .icon {
         visibility: hidden;

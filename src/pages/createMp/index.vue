@@ -4,20 +4,24 @@
       <h3>配置小程序页面</h3>
       <el-button type="primary" plain size="small" @click="onSubmit">生成文件类容</el-button>
     </div>
-    <div class="flex container">
-      <div class="component-list">
-        <h4 class="part-top">组件列表</h4>
-        <componentlist 
-        @on-selected="onSelected" />
+    <div class="flex-b container">
+      <div class="page-component-list">
+        <el-tabs type="card" @tab-click="handleClick">
+          <el-tab-pane label="页面" name="page">
+            <!-- 页面列表 -->
+            <el-input size="mini" 
+              style="text-align: center"
+              placeholder="设置页面标题"
+              type="text"
+              v-model="nodeTree.pageTitle" />
+          </el-tab-pane>
+          <el-tab-pane label="组件" name="component">
+            <componentlist @on-selected="onSelected" />
+          </el-tab-pane>
+        </el-tabs>
       </div>
       <div class="dream-part">
-        <h4 class="part-top">
-          <el-input size="mini" 
-          style="text-align: center"
-          placeholder="设置页面标题"
-          type="text"
-          v-model="nodeTree.pageTitle" />
-        </h4>
+
         <dream 
           ref="dream"
           :treeNode="nodeTree"
@@ -57,6 +61,7 @@
       return {
         dialogTableVisible: false,
         currentIndex: 0,
+        pageIndex: 0,
         editorIndex: -1,
         selectedComponentList: [],
         currentEditorItem: {},
@@ -153,6 +158,9 @@
         // this.currentEditorItem.style= val
         Object.assign(this.currentEditorItem, val)
         this.updateDream()
+      },
+      handleClick(tab, event) {
+        console.log(tab, event);
       }
     }
   }
@@ -165,11 +173,17 @@
     box-shadow: 0px 0px 1px 0px rgba(153, 153, 153, 0.6);
   }
   .container {
+    height: calc(100vh - 43px);
     margin-top: 5px;
     padding: 0 10px;
   }
+  .page-component-list {
+    width: 200px;
+  }
   .dream-part {
     margin: 0 10px;
+    flex: 1;
+    background: #ececf0;
   }
   .part-top {
     height: 28px;

@@ -62,11 +62,13 @@ export default {
       );
     };
 
-    return <div class = "dream" >
-      <div class="phoneSrceen"
-        style={treeNode.style}
-        onClick = {resetAll} >
-        {creatNode(treeNode.children)}
+    return <div class = "dream" onClick = {resetAll} >
+      <div class="phoneSrceen-container">
+        <div class="phoneSrceen"
+          style={treeNode.style}
+          >
+          {creatNode(treeNode.children)}
+        </div>
       </div>
     </div>
   },
@@ -111,11 +113,17 @@ export default {
 
 <style lang="less">
 .dream {
+  width: 100%;
+  // height: 100%;
+  .phoneSrceen-container{
+    width: 375px ;
+    margin: 0 auto;
+  }
   .phoneSrceen {
+    
     border: 1px solid #999999;
-    width: calc(375px + 20px);
-    height: 667px;
-    overflow-y: auto;
+    width: 375px ;
+    min-height: 667px;
     .item {
       position: relative;
       // padding: 5px;
